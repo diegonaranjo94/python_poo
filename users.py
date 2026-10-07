@@ -1,3 +1,12 @@
+from typing import Protocol
+
+## Protocols is used to guarantee that an object implements a specific method or set of methods,
+## without requiring inheritance from a specific class. This allows for more flexible and decoupled code.
+class AskProtocol(Protocol):
+    def borrow_book(self, title:str) -> str:
+        """Function implementet in the class that implements this protocol"""
+        ...
+
 class Users:
     def __init__(self, user_id, username, id):
         self.user_id = user_id
@@ -49,14 +58,11 @@ class Teacher(Users):
 student_1 = Student(1, "Alice", 101, "Computer Science")
 teacher_1 = Teacher(2, "Mr. Smith", 201, "Mathematics")
 
-print(student_1.borrow_book("Introduction to Algorithms"))
-print(student_1.borrow_book("Data Structures"))
-print(student_1.borrow_book("Operating Systems"))
-print(student_1.borrow_book("Database Systems"))
-print(student_1.return_book("Data Structures"))
-print(student_1.borrow_book("Database Systems"))
+student_2 = Student(3, "Bob", 102, "Physics")
 
-print(teacher_1.borrow_book("Calculus"))
-print(teacher_1.borrow_book("Linear Algebra"))
-print(teacher_1.borrow_book("Statistics"))
-print(teacher_1.borrow_book("Probability"))
+## How to use Protocol:
+student_group: list[AskProtocol] = [student_1, student_2]
+
+for user in student_group:
+    print(user.borrow_book("Frankenstein"))
+    print(user.borrow_book("1984"))
