@@ -1,62 +1,30 @@
-from dataclasses import dataclass
+from users import Student, Teacher, AskProtocol
+from books import DigitalBook, PrintableBook
+from library import Library
+from exceptions import LibraryError, InvalidTitleError, UserNotFoundError
 
+library_1 = Library("Itaka Library")
 
-class Book:
-    def __init__(self, title:str, author:str, isbn:int, available:bool=True):
-        self.title: str = title
-        self.author:str = author
-        self.isbn:int = isbn
-        self.available:bool = available
-        self.__is_popular: int = 0
+frankestein = DigitalBook("Frankenstein", "Mary Shelley", 1234567)
+hundred_years_of_solitude = PrintableBook("100 Years of Solitude", "Gabriel Garcia Marquez", 2345678)
 
-    def __str__(self) -> str:
-        return f"Book: {self.title} by {self.author}, ISBN: {self.isbn}, Available: {self.available}"
+student_1 = Student(1, "Alice", 101, "Computer Science")
+teacher_1 = Teacher(2, "Mr. Smith", 201, "Mathematics")
+student_2 = Student(3, "Bob", 102, "Physics")
 
-    def borrow(self) -> None:
-        if self.available:
-            self.available = False
-            self.__is_popular += 1
-        else:
-            return f"{self.title} is currently not available for borrowing."
+library_1.users = [student_1, student_2, teacher_1]
 
-        return f"{self.title} has been borrowed."
+library_1.books = [frankestein, hundred_years_of_solitude]
 
-    def return_book(self) -> None:
-        if not self.available:
-            self.available = True
+print("Welcome to Itaka Library.")
 
-        return f"{self.title} has been returned."
+print("Available books:")
+for book in library_1.available_books():
+    print(f" - {book}")
 
-    def is_popular_book(self) -> bool:
-        return self.__is_popular > 5
-
-    def get_is_popular(self) -> int:
-        return self.__is_popular
-
-    def set_is_popular(self, value:int) -> None:
-        self.__is_popular = value
-
-
-frankestein = Book("Frankenstein", "Mary Shelley", 1234567)
-
-
-print(frankestein)
-
-frankestein.borrow()
-frankestein.return_book()
-frankestein.borrow()
-frankestein.return_book()
-frankestein.borrow()
-frankestein.return_book()
-frankestein.borrow()
-frankestein.return_book()
-
-frankestein.borrow()
-frankestein.return_book()
-frankestein.borrow()
-
-print(frankestein.is_popular_book())
-print(frankestein.get_is_popular())
-
-frankestein.set_is_popular(10)
-print(frankestein.get_is_popular())
+user_id = input("Enter user ID to search: ")
+try:
+    user = library_1.search_user(int(user_id))
+    print(f"User found: {user.username}, ID: {user.user_id}")
+except UserNotFoundError as e:
+    print(f"Error: {e}")
